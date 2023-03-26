@@ -1,0 +1,80 @@
+
+<div class="container px-5 px-sm-0">
+  <% if @book.errors.any? %>
+  <%= @book.errors.count %>error prohibited this obj from being saved:
+  <ul>
+    <% @book.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+  <div class="row">
+    <div class="col-md-3">
+      
+      <h2>User info</h2>
+
+      <%= image_tag @user.get_profile_image(100,100) %>
+      <table class="table">
+        <tr>
+          <th>name</th>
+          <th><%= @user.name %></th>
+        </tr>
+        <tr>
+          <th>introduction</th>
+          <th><%= @user.introduction %></th>
+
+        </tr>
+      </table>
+      <div class="row">
+      <%= link_to edit_user_path(@user), class:"btn btn-outline-secondary btn-block" do %>
+      <i class="fas fa-user-cog"></i>
+      <% end %>
+      </div>
+      <%= render 'list', book: @book %>
+    </div>
+    <div class="col-md-8 offset-md-1">
+      <h2>Books</h2>
+      <table class="table table-hover table-inverse">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Title</th>
+            <th>Opinion</th>
+            <th cplspan="3"></th>
+          </tr>
+        </thead>
+        <% @books.each do |book| %>
+        <tbody>
+          <tr>
+            <td><%= link_to user_path(book.user_id) do %>
+                <%= image_tag book.user.get_profile_image(100,100) %>
+                <% end %>
+            </td>
+
+            <td><%= link_to book_path(book.id) do %>
+                <%= book.title %>
+                <% end %>
+            </td>
+            <td><%= book.body %></td>
+            <td><% if book.favorited_by?(current_user) %>
+<%= link_to  book_favorites_path(book), method: :delete do %>
+  <i class="fas fa-heart"></i>
+  <%= book.favorites.count %>
+<% end %>
+<% else %>
+<%= link_to book_favorites_path(book), method: :post do %>
+  <i class="far fa-heart"></i>
+  <%= book.favorites.count %>
+<% end %>
+<% end %></td>
+            <% end %>
+
+
+          </tr>
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+</div>
